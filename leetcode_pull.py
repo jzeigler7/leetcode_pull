@@ -1,13 +1,11 @@
 import os
 import requests
 
-# API Configuration
 BASE_URL = "https://leetcode.com/graphql"
 HEADERS = {
     "Content-Type": "application/json",
 }
 
-# Map LeetCode languages to file extensions
 LANGUAGE_TO_EXTENSION = {
     "python3": ".py",
     "java": ".java",
@@ -23,7 +21,6 @@ LANGUAGE_TO_EXTENSION = {
     "go": ".go",
 }
 
-# Prompt user for LEETCODE_SESSION token
 def prompt_for_session_cookie():
     print("\n")
     print("=" * 50)
@@ -41,7 +38,6 @@ def prompt_for_session_cookie():
     print("=" * 50)
     return input("Enter your LEETCODE_SESSION cookie: ").strip()
 
-# Step 1: Fetch submissions (without code)
 def fetch_submissions():
     query = """
     query submissions($offset: Int!) {
@@ -87,7 +83,7 @@ def fetch_submissions():
         print(f"Fetched {len(fetched)} submissions.")
         submissions.extend(fetched)
 
-        if len(fetched) < 20:  # Break if fewer than 20 submissions were returned
+        if len(fetched) < 20: 
             break
 
         offset += 20
@@ -95,7 +91,6 @@ def fetch_submissions():
     print(f"Total submissions fetched: {len(submissions)}")
     return submissions
 
-# Step 2: Fetch code for a submission
 def fetch_code(submission_id):
     query = """
     query submissionDetails($id: Int!) {
@@ -123,7 +118,6 @@ def fetch_code(submission_id):
     question_id = data.get("data", {}).get("submissionDetails", {}).get("question", {}).get("questionFrontendId", None)
     return code, question_id
 
-# Step 3: Filter for the most recent accepted solutions
 def get_recent_accepted_solutions(submissions):
     accepted_solutions = {}
 
@@ -138,7 +132,6 @@ def get_recent_accepted_solutions(submissions):
     print(f"Filtered {len(accepted_solutions)} accepted solutions.")
     return accepted_solutions.values()
 
-# Step 4: Save solutions to the LEETCODE directory
 def save_solutions_to_files(solutions):
     script_directory = os.path.dirname(os.path.abspath(__file__))
     leetcode_dir = os.path.join(os.path.dirname(script_directory), "LEETCODE")
